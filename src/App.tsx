@@ -1,23 +1,34 @@
+import 'animate.css'
+import Confetti from 'react-confetti'
+import { useSelector } from 'react-redux'
+import useWindowSize from 'react-use/lib/useWindowSize'
+
 import './App.css'
-import reactLogo from './assets/react.svg'
-import { Counter } from './features/counter/Counter'
+import HanoiControls from './components/HanoiControls'
 import Hanoi from './features/hanoi/Hanoi'
-import viteLogo from '/vite.svg'
+import { RootState } from './store'
 
 function App() {
+  const { width, height } = useWindowSize()
+  const isFinished = useSelector(
+    (state: RootState) =>
+      state.hanoi.discsCount === state.hanoi.towers.finish.length,
+  )
+
   return (
     <>
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <Counter /> */}
-      <Hanoi />
+      {isFinished && (
+        <Confetti
+          // gravity={0.3}
+          // friction={0.99}
+          // initialVelocityY={20}
+          width={width}
+          height={height}
+          recycle={false}
+        />
+      )}
+      <Hanoi finished={isFinished} />
+      <HanoiControls />
     </>
   )
 }

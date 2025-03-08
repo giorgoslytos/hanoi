@@ -2,8 +2,7 @@ import { useDroppable } from '@dnd-kit/core'
 import { useSelector } from 'react-redux'
 
 import { RootState } from '../store'
-import Disc from './Disc'
-import { TowerProp } from './types'
+import { TowerProp } from '../types'
 
 const Tower = ({ id }: React.PropsWithChildren<TowerProp>) => {
   const { isOver, setNodeRef } = useDroppable({

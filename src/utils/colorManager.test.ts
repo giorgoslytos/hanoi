@@ -38,7 +38,6 @@ describe('colorManager function', () => {
     const size = 6
     const result1 = generateColors(size)
     const result2 = generateColors(size)
-    console.log({ result1, result2 })
     expect(result1).not.toEqual(result2)
   })
 })

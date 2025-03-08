@@ -3,23 +3,45 @@ import { CSS } from '@dnd-kit/utilities'
 
 import React from 'react'
 
-const Disc = ({ id }: React.PropsWithChildren<{ id: number }>) => {
+import { TowerId } from '../types'
+
+const Disc = ({
+  id,
+  towerId,
+  color,
+  enabled,
+}: React.PropsWithChildren<{
+  id: number
+  towerId: TowerId
+  color: string
+  enabled: boolean
+}>) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id,
+      disabled: !enabled,
+      data: { from: towerId },
     })
   const style = {
     transform: CSS.Translate.toString(transform),
     width: id * 20 + 36,
     zIndex: isDragging ? 999 : 99,
-    boxShadow: isDragging ? '0px 0px 0px 3px rgba(30,185,157,1)' : 'none',
+    backgroundColor: color,
+    outline: isDragging ? 'solid 2px #ccc' : 'none',
+    boxShadow: isDragging ? '0px 0px 0px 5px rgba(30,185,157,1)' : 'none',
   }
 
-  const cursor = isDragging ? 'cursor-grabbing' : 'cursor-grab'
+  const cursor = enabled
+    ? isDragging
+      ? 'cursor-grabbing'
+      : 'cursor-grab'
+    : 'cursor-default'
+
   return (
     <button
+      onDrag={console.log}
       ref={setNodeRef}
-      className={`${cursor} px-2 h-4 py-3 bg-blue-600 rounded-2xl relative`}
+      className={`${cursor} px-2 h-4 py-3 rounded-2xl relative`}
       style={style}
       {...listeners}
       {...attributes}
