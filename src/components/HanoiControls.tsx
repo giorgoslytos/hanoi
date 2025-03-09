@@ -9,7 +9,7 @@ import {
   setColors,
   setDiscCount,
 } from '../features/hanoi/hanoiSlice'
-import { RootState } from '../store'
+import { RootState, store } from '../store'
 import { TowerId } from '../types'
 
 const HanoiControls = () => {
@@ -35,20 +35,41 @@ const HanoiControls = () => {
     dispatch(setDiscCount(Number(value)))
   }
 
-  const handleAutoHanoi = () => {
-    autoHanoi(discsCount, 'start', 'finish', 'temp')
+  const handleAutoHanoi = async () => {
+    const asdf = autoHanoi(discsCount, 'start', 'finish', 'temp')
+    let result = await asdf.next(store.getState().hanoi.autoSpeed) // Get initial autospeed
+    while (!result.done) {
+      result = await asdf.next(store.getState().hanoi.autoSpeed) // Pass updated speed
+    }
   }
-  const autoHanoi = async function (
+
+  const delay = (num: number, action: any) =>
+    new Promise((resolve) =>
+      setTimeout(() => {
+        resolve(action)
+      }, num),
+    )
+
+  async function* autoHanoi(
     n: number,
     from_rod: TowerId,
     to_rod: TowerId,
     aux_rod: TowerId,
-  ) {
+  ): AsyncGenerator<
+    { discId: number; from: TowerId; to: TowerId } | number,
+    void,
+    number
+  > {
     if (n == 0) {
       return
     }
 
-    await autoHanoi(n - 1, from_rod, aux_rod, to_rod)
+    let autospeed = yield 1000
+    await delay(
+      autospeed,
+      dispatch(moveDisc({ discId: n, from: from_rod, to: to_rod })),
+    )
+    yield* await autoHanoi(n - 1, from_rod, aux_rod, to_rod)
     console.log(
       'Move disk ' +
         n +
@@ -58,20 +79,12 @@ const HanoiControls = () => {
         to_rod +
         '<br/>',
     )
-    await new Promise((res) => {
-      setTimeout(
-        () =>
-          res(dispatch(moveDisc({ discId: n, from: from_rod, to: to_rod }))),
-        autoSpeed,
-      )
-    })
-    await autoHanoi(n - 1, aux_rod, to_rod, from_rod)
+    yield* await autoHanoi(n - 1, aux_rod, to_rod, from_rod)
   }
 
   const handleAutoSpeedChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(value)
     dispatch(setAutoSpeed(Number(value)))
   }
 
