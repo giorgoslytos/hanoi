@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-import { TowerId } from '../../types'
+import { HanoiMoveDisc, TowerId } from '../../types'
 import generateColors from '../../utils/colorManager'
 
 export interface HanoiState {
   mode: 'auto' | 'manual'
+  autoHanoiState: 'idle' | 'running' | 'paused' | 'completed' | 'failed'
   autoSpeed: number
   discsCount: number
   moves: number
@@ -19,11 +20,12 @@ export interface HanoiState {
 
 const initialState: HanoiState = {
   mode: 'manual',
-  autoSpeed: 500,
-  discsCount: 3,
+  autoHanoiState: 'idle',
+  autoSpeed: 1000,
+  discsCount: 10,
   moves: 0,
   towers: {
-    start: [1, 2, 3],
+    start: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     temp: [],
     finish: [],
   },
@@ -31,7 +33,7 @@ const initialState: HanoiState = {
 }
 
 export const hanoiSlice = createSlice({
-  name: 'counter',
+  name: 'hanoi',
   initialState,
   reducers: {
     setColors: (state) => {
@@ -39,17 +41,12 @@ export const hanoiSlice = createSlice({
     },
     moveDisc: (
       state,
-      {
-        payload: { discId, from, to },
-      }: PayloadAction<{
-        discId: number
-        from: TowerId
-        to: TowerId
-      }>,
+      { payload: { discId, from, to } }: PayloadAction<HanoiMoveDisc>,
     ) => {
       state.towers[from] = state.towers[from].slice(1)
       state.towers[to] = [discId, ...state.towers[to]]
     },
+    moveDiscDelayed: (_state, _action: PayloadAction<HanoiMoveDisc>) => {},
     resetDiscs: (state) => {
       state.towers.temp = []
       state.towers.finish = []
@@ -57,6 +54,7 @@ export const hanoiSlice = createSlice({
         { length: state.discsCount },
         (_, i) => i + 1,
       )
+      state.autoHanoiState = 'idle'
       state.moves = 0
     },
     setDiscCount: (state, { payload }: PayloadAction<number>) => {
@@ -69,11 +67,45 @@ export const hanoiSlice = createSlice({
     setAutoSpeed: (state, { payload }: PayloadAction<number>) => {
       state.autoSpeed = payload
     },
+    startAutoHanoi: (state) => {
+      state.towers.temp = []
+      state.towers.finish = []
+      state.towers.start = Array.from(
+        { length: state.discsCount },
+        (_, i) => i + 1,
+      )
+      state.moves = 0
+      state.mode = 'auto'
+      state.autoHanoiState = 'running'
+    },
+    pauseAutoHanoi: (state) => {
+      state.autoHanoiState = 'paused'
+    },
+    resumeAuto: (state) => {
+      state.autoHanoiState = 'running'
+    },
+    completeAutoHanoi: (state) => {
+      state.autoHanoiState = 'completed'
+    },
+    setMode: (state, { payload }: PayloadAction<HanoiState['mode']>) => {
+      state.mode = payload
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setColors, moveDisc, resetDiscs, setDiscCount, setAutoSpeed } =
-  hanoiSlice.actions
+export const {
+  setColors,
+  moveDisc,
+  moveDiscDelayed,
+  completeAutoHanoi,
+  resetDiscs,
+  setDiscCount,
+  setAutoSpeed,
+  startAutoHanoi,
+  pauseAutoHanoi,
+  resumeAuto,
+  setMode,
+} = hanoiSlice.actions
 
 export default hanoiSlice.reducer

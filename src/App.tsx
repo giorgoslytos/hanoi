@@ -10,14 +10,13 @@ import { RootState } from './store'
 
 function App() {
   const { width, height } = useWindowSize()
-  const isFinished = useSelector(
-    (state: RootState) =>
-      state.hanoi.discsCount === state.hanoi.towers.finish.length,
-  )
 
+  const isCompleted = useSelector(
+    (state: RootState) => state.hanoi.autoHanoiState === 'completed',
+  )
   return (
     <>
-      {isFinished && (
+      {isCompleted && (
         <Confetti
           // gravity={0.3}
           // friction={0.99}
@@ -27,7 +26,7 @@ function App() {
           recycle={false}
         />
       )}
-      <Hanoi finished={isFinished} />
+      <Hanoi finished={isCompleted} />
       <HanoiControls />
     </>
   )
