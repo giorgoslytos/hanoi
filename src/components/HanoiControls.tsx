@@ -53,26 +53,24 @@ const HanoiControls = () => {
           <ModeSelector />
         </div>
         <div className="mt-4 flex items-center space-x-2">
-          <label htmlFor="number" className="text-gray-700">
+          <label htmlFor="number" className="text-gray-200">
             Select number of Discs:
           </label>
           <select
             id="number"
             value={discsCount}
             onChange={handleSelectDiscCountChange}
-            className="px-4 py-2 border-2 border-gray-400 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-4 py-2 border-2 border-gray-400 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black"
           >
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+              <option value={num} className="bg-black">
+                {num}
+              </option>
+            ))}
           </select>
         </div>
       </div>
+      <h3 className="text-gray-200">Moves:</h3>
     </div>
   )
 }
