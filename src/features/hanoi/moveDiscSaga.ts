@@ -1,7 +1,7 @@
-import { delay, put, select, takeEvery } from 'redux-saga/effects'
+import { delay, put, select, take, takeEvery } from 'redux-saga/effects'
 
 import { RootState } from '../../store'
-import { moveDisc, moveDiscDelayed } from './hanoiSlice'
+import { moveDisc, moveDiscDelayed, resumeAuto } from './hanoiSlice'
 
 function* handleDelayedMoveDisc({
   payload,
@@ -10,7 +10,15 @@ function* handleDelayedMoveDisc({
     (state: RootState) => state.hanoi.autoSpeed,
   )
   yield delay(autospeed)
-  yield put(moveDisc(payload))
+  const autoHanoiState: RootState['hanoi']['autoHanoiState'] = yield select(
+    (state: RootState) => state.hanoi.autoHanoiState,
+  )
+  if (autoHanoiState === 'paused') {
+    yield take(resumeAuto)
+    yield put(moveDisc(payload))
+  } else if (autoHanoiState === 'running') {
+    yield put(moveDisc(payload))
+  }
 }
 
 // Root saga

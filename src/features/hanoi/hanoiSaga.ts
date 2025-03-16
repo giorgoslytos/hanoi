@@ -1,15 +1,4 @@
-import {
-  CallEffect,
-  PutEffect,
-  SelectEffect,
-  debounce,
-  delay,
-  put,
-  select,
-  take,
-  takeEvery,
-  takeLatest,
-} from 'redux-saga/effects'
+import { put, select, take, takeLatest } from 'redux-saga/effects'
 
 import { RootState } from '../../store'
 import { TowerId } from '../../types'
@@ -34,7 +23,6 @@ function* autoHanoi(
   if (autoState === 'paused') {
     yield take(resumeAuto.type)
   }
-
   if (n == 0) {
     return
   }
@@ -42,7 +30,6 @@ function* autoHanoi(
   console.log(
     'Move disk ' + n + ' from rod ' + from_rod + ' to rod ' + to_rod + '<br/>',
   )
-
   yield put(moveDiscDelayed({ discId: n, from: from_rod, to: to_rod }))
   yield take(moveDisc.type)
   yield* autoHanoi(n - 1, aux_rod, to_rod, from_rod)
@@ -58,5 +45,5 @@ function* handleAutoHanoi() {
 
 // Root saga
 export default function* watchAutoHanoiStart() {
-  yield takeEvery(startAutoHanoi, handleAutoHanoi)
+  yield takeLatest(startAutoHanoi, handleAutoHanoi)
 }
