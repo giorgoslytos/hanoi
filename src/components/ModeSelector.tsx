@@ -5,7 +5,6 @@ import { match } from 'ts-pattern'
 
 import React from 'react'
 
-import Resume from '../assets/resume.png'
 import {
   HanoiState,
   pauseAutoHanoi,
@@ -49,7 +48,7 @@ const ModeSelector = () => {
   const handleResume = () => dispatch(resumeAuto())
 
   const autoSpeedRangeValue = React.useMemo(
-    () => MAX_AUTOSPEED - autoSpeed,
+    () => MAX_AUTOSPEED - autoSpeed + 50,
     [autoSpeed],
   )
   return (
