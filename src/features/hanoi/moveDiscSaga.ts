@@ -15,8 +15,10 @@ function* handleDelayedMoveDisc({
   )
   if (autoHanoiState === 'paused') {
     yield take(resumeAuto)
-    yield put(moveDisc(payload))
-  } else if (autoHanoiState === 'running') {
+  }
+  const updatedAutoHanoiState: RootState['hanoi']['autoHanoiState'] =
+    yield select((state: RootState) => state.hanoi.autoHanoiState)
+  if (updatedAutoHanoiState === 'running') {
     yield put(moveDisc(payload))
   }
 }

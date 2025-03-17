@@ -24,7 +24,7 @@ const Disc = ({
     })
   const style = {
     transform: CSS.Translate.toString(transform),
-    width: id * 20 + 36,
+    width: id * 15 + 28,
     zIndex: isDragging ? 999 : 99,
     backgroundColor: color,
     outline: isDragging ? 'solid 2px #ccc' : 'none',

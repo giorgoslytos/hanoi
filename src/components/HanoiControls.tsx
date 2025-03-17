@@ -13,6 +13,7 @@ import ModeSelector from './ModeSelector'
 const HanoiControls = () => {
   const dispatch = useDispatch()
   const discsCount = useSelector((state: RootState) => state.hanoi.discsCount)
+  const moves = useSelector((state: RootState) => state.hanoi.moves)
   React.useEffect(() => {
     dispatch(setDiscCount(discsCount))
     dispatch(setColors())
@@ -70,7 +71,7 @@ const HanoiControls = () => {
           </select>
         </div>
       </div>
-      <h3 className="text-gray-200">Moves:</h3>
+      <h3 className="text-gray-200">Moves: {moves}</h3>
     </div>
   )
 }

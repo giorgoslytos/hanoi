@@ -15,7 +15,7 @@ const Hanoi = ({ finished }: { finished: boolean }) => {
     const to = over.id as TowerId
     const discId = active.id as number
     const from = active.data.current?.from
-    if (Math.min(...towers[to]) < discId) return
+    if (Math.min(...towers[to]) < discId || to === from) return
     dispatch(moveDisc({ discId, from, to }))
   }
   function handleDragOver(e: DragOverEvent) {

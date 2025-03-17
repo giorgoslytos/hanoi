@@ -45,6 +45,7 @@ export const hanoiSlice = createSlice({
     ) => {
       state.towers[from] = state.towers[from].slice(1)
       state.towers[to] = [discId, ...state.towers[to]]
+      state.moves = ++state.moves
     },
     moveDiscDelayed: (_state, _action: PayloadAction<HanoiMoveDisc>) => {},
     resetDiscs: (state) => {
