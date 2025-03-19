@@ -39,6 +39,7 @@ const Disc = ({
 
   return (
     <button
+      data-id={id}
       onDrag={console.log}
       ref={setNodeRef}
       className={`${cursor} px-2 h-4 py-3 rounded-2xl relative`}

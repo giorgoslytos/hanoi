@@ -16,6 +16,7 @@ const Tower = ({ id }: React.PropsWithChildren<TowerProp>) => {
     <div className="place-items-center relative w-52">
       <div
         ref={setNodeRef}
+        data-id={id}
         style={style}
         className="relative h-64 border border-b-0 border-x-2 border-t-2 border-amber-100 w-4 bg-orange-200 rounded-t-2xl"
       ></div>

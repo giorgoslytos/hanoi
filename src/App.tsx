@@ -26,7 +26,9 @@ function App() {
           recycle={false}
         />
       )}
-      <Hanoi finished={isCompleted} />
+      <div className="flex flex-wrap">
+        <Hanoi finished={isCompleted} />
+      </div>
       <HanoiControls />
     </>
   )
