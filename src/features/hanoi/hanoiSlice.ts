@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-import { HanoiMoveDisc, TowerId } from '../../types'
+import { HanoiMode, HanoiMoveDisc } from '../../types'
 import generateColors from '../../utils/colorManager'
 
 export interface HanoiState {
-  mode: 'auto' | 'manual'
+  mode: HanoiMode
   autoHanoiState: 'idle' | 'running' | 'paused' | 'completed' | 'failed'
   autoSpeed: number
   discsCount: number
@@ -15,20 +15,30 @@ export interface HanoiState {
     temp: number[]
     finish: number[]
   }
+  undo: HanoiMoveDisc[]
+  redo: {
+    start: number[]
+    temp: number[]
+    finish: number[]
+  }[]
   discColors: { [x: string]: string }
 }
+
+const DEFAULT_DISC_COUNT = 4
 
 const initialState: HanoiState = {
   mode: 'manual',
   autoHanoiState: 'idle',
   autoSpeed: 1000,
-  discsCount: 10,
+  discsCount: DEFAULT_DISC_COUNT,
   moves: 0,
   towers: {
-    start: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    start: Array.from({ length: DEFAULT_DISC_COUNT }, (_, n) => n + 1),
     temp: [],
     finish: [],
   },
+  undo: [],
+  redo: [],
   discColors: {},
 }
 
@@ -91,6 +101,13 @@ export const hanoiSlice = createSlice({
     setMode: (state, { payload }: PayloadAction<HanoiState['mode']>) => {
       state.mode = payload
     },
+    storeMovement: (state, { payload }: PayloadAction<HanoiMoveDisc>) => {
+      state.undo.push(payload)
+    },
+    undoLastMove: (_state) => {},
+    removeLastMove: (state) => {
+      state.undo.pop()
+    },
   },
 })
 
@@ -107,6 +124,9 @@ export const {
   pauseAutoHanoi,
   resumeAuto,
   setMode,
+  storeMovement,
+  undoLastMove,
+  removeLastMove,
 } = hanoiSlice.actions
 
 export default hanoiSlice.reducer

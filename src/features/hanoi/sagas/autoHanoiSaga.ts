@@ -9,20 +9,20 @@ import {
   takeLatest,
 } from 'redux-saga/effects'
 
-import { RootState } from '../../store'
-import { TowerId } from '../../types'
+import { RootState } from '../../../store'
+import { TowerId } from '../../../types'
 import {
   completeAutoHanoi,
   moveDisc,
   resetDiscs,
   resumeAuto,
   startAutoHanoi,
-} from './hanoiSlice'
+} from '../hanoiSlice'
 
 const isElementFound = (element: Element | null): element is Element =>
   !!element
 
-function* moveDiscCh(discId: number, from: TowerId, to: TowerId) {
+export function* moveDiscCh(discId: number, from: TowerId, to: TowerId) {
   const discEl = document.querySelector<HTMLButtonElement>(
     `[data-id="${discId}"]`,
   )
@@ -65,6 +65,7 @@ function* moveDiscCh(discId: number, from: TowerId, to: TowerId) {
     yield put(moveDisc({ discId, from, to }))
   }
 }
+
 function* autoHanoi(
   n: number,
   from_rod: TowerId,

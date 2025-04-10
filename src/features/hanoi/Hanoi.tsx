@@ -10,29 +10,24 @@ import { moveDisc } from './hanoiSlice'
 const Hanoi = ({ finished }: { finished: boolean }) => {
   const dispatch = useDispatch()
   const towers = useSelector((state: RootState) => state.hanoi.towers)
+  const mode = useSelector((state: RootState) => state.hanoi.mode)
   function handleDragEnd({ active, over }: DragEndEvent) {
     if (!over) return
     const to = over.id as TowerId
     const discId = active.id as number
     const from = active.data.current?.from
     if (Math.min(...towers[to]) < discId || to === from) return
-    dispatch(moveDisc({ discId, from, to }))
-  }
-  function handleDragOver(e: DragOverEvent) {
-    console.log({ dragEnd: e, asdf: e.over?.id })
-    const discId = e.active.id as number
-    const over = e.over?.id as TowerId
-
-    if (!over) return
-    if (Math.min(...towers[over]) < discId) {
-      console.log('asdf')
-    }
+    dispatch(moveDisc({ discId, from, to, mode }))
   }
   return (
     <div
-      className={`border p-8 border-amber-50 ${finished ? 'pointer-events-none' : 'pointer-events-auto'}`}
+      className={`border p-8 border-amber-50 ${
+        finished || mode === 'auto'
+          ? 'pointer-events-none'
+          : 'pointer-events-auto'
+      }`}
     >
-      <DndContext onDragEnd={handleDragEnd} onDragOver={handleDragOver}>
+      <DndContext onDragEnd={handleDragEnd}>
         <ContainerWrapper>
           <TowerWrapper id="start" />
           <TowerWrapper id="temp" />

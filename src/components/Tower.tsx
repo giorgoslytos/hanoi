@@ -1,30 +1,32 @@
 import { useDroppable } from '@dnd-kit/core'
 import { useSelector } from 'react-redux'
+import { match } from 'ts-pattern'
 
-import { RootState } from '../store'
+import React from 'react'
+
+import getTowerHoverState from '../features/hanoi/selectors/getTowerHoverState'
 import { TowerProp } from '../types'
 
 const Tower = ({ id }: React.PropsWithChildren<TowerProp>) => {
-  const { isOver, setNodeRef } = useDroppable({
+  const { isOver, over, active, setNodeRef } = useDroppable({
     id,
   })
+  const towerHoverState = useSelector(getTowerHoverState(over, isOver, active))
+
   const style = {
-    boxShadow: isOver ? '0px 0px 0px 3px rgba(30,185,157,1)' : 'none',
+    boxShadow: match(towerHoverState)
+      .with('legal', () => '0px 0px 0px 3px rgba(30,185,157,1)')
+      .with('illegal', () => '0px 0px 0px 3px rgba(255, 86, 86, .8)')
+      .otherwise(() => 'none'),
   }
-  const items = useSelector((state: RootState) => state.hanoi.towers[id])
   return (
     <div className="place-items-center relative w-52">
-      <div
-        ref={setNodeRef}
-        data-id={id}
-        style={style}
-        className="relative h-64 border border-b-0 border-x-2 border-t-2 border-amber-100 w-4 bg-orange-200 rounded-t-2xl"
-      ></div>
-      {/* <div className="flex flex-col items-center bottom-0 absolute m-auto left-0 right-0">
-        {items.map((item) => (
-          <Disc id={item} />
-        ))}
-      </div> */}
+      <div ref={setNodeRef} data-id={id} className="px-5">
+        <div
+          style={style}
+          className="relative h-64 border border-b-0 border-x-2 border-t-2 border-amber-100 w-4 bg-orange-200 rounded-t-2xl"
+        ></div>
+      </div>
     </div>
   )
 }

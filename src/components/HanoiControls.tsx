@@ -6,8 +6,11 @@ import {
   resetDiscs,
   setColors,
   setDiscCount,
+  undoLastMove,
 } from '../features/hanoi/hanoiSlice'
+import getLastMovement from '../features/hanoi/selectors/getLastMovement'
 import { RootState } from '../store'
+import { generateInstructions } from '../utils/autoHanoi'
 import ModeSelector from './ModeSelector'
 
 const HanoiControls = () => {
@@ -32,6 +35,11 @@ const HanoiControls = () => {
   }: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(setDiscCount(Number(value)))
   }
+
+  const handleUndo = () => {
+    dispatch(undoLastMove())
+  }
+  const disableUndo = !useSelector(getLastMovement())
 
   return (
     <div className="m-8">
@@ -72,6 +80,19 @@ const HanoiControls = () => {
         </div>
       </div>
       <h3 className="text-gray-200">Moves: {moves}</h3>
+      <button onClick={() => console.log(generateInstructions(discsCount))}>
+        sadf
+      </button>
+      <button
+        onClick={handleUndo}
+        disabled={disableUndo}
+        className={
+          `${disableUndo ? 'bg-gray-400 cursor-not-allowed opacity-50' : 'bg-teal-100 hover:bg-teal-500 text-teal-700 hover:text-white hover:border-transparent border-teal-500'}` +
+          ' font-semibold  py-2 px-4 border rounded'
+        }
+      >
+        undo
+      </button>
     </div>
   )
 }
