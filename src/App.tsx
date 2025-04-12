@@ -17,14 +17,7 @@ function App() {
   return (
     <>
       {isCompleted && (
-        <Confetti
-          // gravity={0.3}
-          // friction={0.99}
-          // initialVelocityY={20}
-          width={width}
-          height={height}
-          recycle={false}
-        />
+        <Confetti width={width} height={height} recycle={false} />
       )}
       <div className="flex flex-wrap">
         <Hanoi finished={isCompleted} />

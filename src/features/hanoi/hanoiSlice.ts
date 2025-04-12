@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-import { HanoiMode, HanoiMoveDisc } from '../../types'
+import { HanoiInstructions, HanoiMode, HanoiMoveDisc } from '../../types'
 import generateColors from '../../utils/colorManager'
 
 export interface HanoiState {
@@ -15,6 +15,7 @@ export interface HanoiState {
     temp: number[]
     finish: number[]
   }
+  instructions: [string, HanoiInstructions][]
   undo: HanoiMoveDisc[]
   redo: {
     start: number[]
@@ -24,7 +25,7 @@ export interface HanoiState {
   discColors: { [x: string]: string }
 }
 
-const DEFAULT_DISC_COUNT = 4
+const DEFAULT_DISC_COUNT = 3
 
 const initialState: HanoiState = {
   mode: 'manual',
@@ -37,6 +38,7 @@ const initialState: HanoiState = {
     temp: [],
     finish: [],
   },
+  instructions: [],
   undo: [],
   redo: [],
   discColors: {},
@@ -53,8 +55,11 @@ export const hanoiSlice = createSlice({
       state,
       { payload: { discId, from, to } }: PayloadAction<HanoiMoveDisc>,
     ) => {
-      state.towers[from] = state.towers[from].slice(1)
-      state.towers[to] = [discId, ...state.towers[to]]
+      state.towers = {
+        ...state.towers,
+        [from]: state.towers[from].slice(1),
+        [to]: [discId, ...state.towers[to]],
+      }
       state.moves = ++state.moves
     },
     moveDiscDelayed: (_state, _action: PayloadAction<HanoiMoveDisc>) => {},
@@ -79,13 +84,6 @@ export const hanoiSlice = createSlice({
       state.autoSpeed = payload
     },
     startAutoHanoi: (state) => {
-      state.towers.temp = []
-      state.towers.finish = []
-      state.towers.start = Array.from(
-        { length: state.discsCount },
-        (_, i) => i + 1,
-      )
-      state.moves = 0
       state.mode = 'auto'
       state.autoHanoiState = 'running'
     },
@@ -108,10 +106,15 @@ export const hanoiSlice = createSlice({
     removeLastMove: (state) => {
       state.undo.pop()
     },
+    setInstructions: (
+      state,
+      { payload }: PayloadAction<[string, HanoiInstructions][]>,
+    ) => {
+      state.instructions = payload
+    },
   },
 })
 
-// Action creators are generated for each case reducer function
 export const {
   setColors,
   moveDisc,
@@ -126,6 +129,7 @@ export const {
   setMode,
   storeMovement,
   undoLastMove,
+  setInstructions,
   removeLastMove,
 } = hanoiSlice.actions
 

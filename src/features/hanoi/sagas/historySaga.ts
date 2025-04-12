@@ -1,12 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import {
-  call,
-  put,
-  select,
-  takeEvery,
-  takeLatest,
-  takeLeading,
-} from 'redux-saga/effects'
+import { call, put, select, takeEvery, takeLeading } from 'redux-saga/effects'
 
 import { HanoiMoveDisc } from '../../../types'
 import {
@@ -27,11 +20,8 @@ function* storeMovementSaga({
 }
 
 function* undoLastMoveSaga() {
-  console.log('undo')
   const instruction: HanoiMoveDisc = yield select(getLastMovement())
-  console.log({ instruction })
-  // yield put(moveDisc({ ...instruction, mode: 'auto' }))
-  const { discId, from, to, mode } = instruction
+  const { discId, from, to } = instruction
   yield call(moveDiscCh, discId, from, to)
   yield put(removeLastMove())
 }

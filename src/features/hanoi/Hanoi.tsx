@@ -1,4 +1,4 @@
-import { DndContext, DragEndEvent, DragOverEvent } from '@dnd-kit/core'
+import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { useDispatch, useSelector } from 'react-redux'
 
 import ContainerWrapper from '../../components/ContainerWrapper'

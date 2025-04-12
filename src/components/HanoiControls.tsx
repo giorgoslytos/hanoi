@@ -6,6 +6,7 @@ import {
   resetDiscs,
   setColors,
   setDiscCount,
+  setInstructions,
   undoLastMove,
 } from '../features/hanoi/hanoiSlice'
 import getLastMovement from '../features/hanoi/selectors/getLastMovement'
@@ -40,6 +41,11 @@ const HanoiControls = () => {
     dispatch(undoLastMove())
   }
   const disableUndo = !useSelector(getLastMovement())
+
+  const handleGenerateInstructions = () => {
+    const instructions = generateInstructions(discsCount)
+    dispatch(setInstructions(instructions))
+  }
 
   return (
     <div className="m-8">
@@ -80,9 +86,7 @@ const HanoiControls = () => {
         </div>
       </div>
       <h3 className="text-gray-200">Moves: {moves}</h3>
-      <button onClick={() => console.log(generateInstructions(discsCount))}>
-        sadf
-      </button>
+      <button onClick={handleGenerateInstructions}>sadf</button>
       <button
         onClick={handleUndo}
         disabled={disableUndo}

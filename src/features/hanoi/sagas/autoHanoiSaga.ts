@@ -10,14 +10,17 @@ import {
 } from 'redux-saga/effects'
 
 import { RootState } from '../../../store'
-import { TowerId } from '../../../types'
+import { HanoiInstructions as HanoiInstruction, TowerId } from '../../../types'
 import {
   completeAutoHanoi,
   moveDisc,
+  removeLastMove,
   resetDiscs,
   resumeAuto,
   startAutoHanoi,
+  undoLastMove,
 } from '../hanoiSlice'
+import getCurrentState from '../selectors/getCurrentState'
 
 const isElementFound = (element: Element | null): element is Element =>
   !!element
@@ -32,6 +35,7 @@ export function* moveDiscCh(discId: number, from: TowerId, to: TowerId) {
   const toHanoiTowerEl = document.querySelector<HTMLDivElement>(
     `[data-id="${to}"]`,
   )
+
   if (
     isElementFound(discEl) &&
     isElementFound(hanoiTowerEl) &&
@@ -66,51 +70,54 @@ export function* moveDiscCh(discId: number, from: TowerId, to: TowerId) {
   }
 }
 
-function* autoHanoi(
-  n: number,
-  from_rod: TowerId,
-  to_rod: TowerId,
-  aux_rod: TowerId,
-): Generator {
-  const autoState = (yield select(
-    (state: RootState) => state.hanoi.autoHanoiState,
-  )) as RootState['hanoi']['autoHanoiState']
-
-  if (autoState === 'paused') {
-    yield take(resumeAuto.type)
-  }
-  if (n == 0) {
-    return
-  }
-  yield* autoHanoi(n - 1, from_rod, aux_rod, to_rod)
-  console.log(
-    'Move disk ' + n + ' from rod ' + from_rod + ' to rod ' + to_rod + '<br/>',
+function* autoHanoi() {
+  const instructions: [string, HanoiInstruction][] = yield select(
+    (state: RootState) => state.hanoi.instructions,
   )
-  // yield put(moveDiscDelayed({ discId: n, from: from_rod, to: to_rod }))
-  yield call(moveDiscCh, n, from_rod, to_rod)
-  // yield take(moveDisc.type)
-  yield* autoHanoi(n - 1, aux_rod, to_rod, from_rod)
+  const instructionsLength: number = yield select(
+    (state: RootState) => state.hanoi.instructions.length,
+  )
+
+  let i = 0
+  while (true) {
+    const autoState = (yield select(
+      (state: RootState) => state.hanoi.autoHanoiState,
+    )) as RootState['hanoi']['autoHanoiState']
+    if (autoState === 'paused') {
+      yield take(resumeAuto.type)
+    }
+    if (instructionsLength === i) {
+      break
+    }
+
+    const currentStateId: string = yield select(getCurrentState)
+
+    const index = instructions.findIndex(
+      ([instrId]) => instrId === currentStateId,
+    )
+
+    if (index === -1) {
+      yield put(undoLastMove())
+      yield take(removeLastMove)
+    } else {
+      const [_stateId, [n, from, to]] = instructions[index]
+      yield delay(0)
+      yield call(moveDiscCh, n, from, to)
+      i = index + 1
+    }
+  }
 }
-
 function* handleAutoHanoi() {
-  const discsCount: number = yield select(
-    (state: RootState) => state.hanoi.discsCount,
-  )
-
-  yield autoHanoi(discsCount, 'start', 'finish', 'temp')
+  yield call(autoHanoi)
   yield put(completeAutoHanoi())
 }
 
-// Root saga
 export default function* watchAutoHanoiStart() {
   while (true) {
-    // Wait for startAutoHanoi action
     const task = (yield takeLatest(startAutoHanoi, handleAutoHanoi)) as Task
 
-    // Wait for resetDiscs action
     yield take(resetDiscs)
 
-    // Cancel the running saga (if it exists)
     if (task) {
       yield cancel(task)
       Array.from({ length: 10 }, (_, index) => index + 1).forEach((discId) => {
