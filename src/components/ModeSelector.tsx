@@ -22,7 +22,7 @@ const ModeSelector = () => {
   const autoSpeed = useSelector((state: RootState) => state.hanoi.autoSpeed)
   const mode = useSelector((state: RootState) => state.hanoi.mode)
   const autoHanoiState = useSelector(
-    (state: RootState) => state.hanoi.autoHanoiState,
+    (state: RootState) => state.hanoi.hanoiState,
   )
 
   const startAuto = () => {
@@ -51,15 +51,19 @@ const ModeSelector = () => {
     () => MAX_AUTOSPEED - autoSpeed + 50,
     [autoSpeed],
   )
+
+  const moves = useSelector((state: RootState) => state.hanoi.moves)
+
   return (
-    <div className="flex space-x-2">
+    <div className="flex space-x-2 my-4">
+      <h3 className="text-gray-300 my-auto font-bold w-24">Moves: {moves}</h3>
       <label className="cursor-pointer">
         <input
           type="radio"
           name="mode"
           value="manual"
+          checked={mode === 'manual'}
           className="hidden peer"
-          defaultChecked
           onChange={handleModeChange}
         />
         <div className="px-4 py-2 font-semibold border border-teal-400 rounded text-teal-700  peer-checked:border-teal-500 peer-checked:bg-teal-500 peer-checked:text-white transition">
@@ -72,6 +76,7 @@ const ModeSelector = () => {
           type="radio"
           name="mode"
           value="auto"
+          checked={mode === 'auto'}
           className="hidden peer"
           onChange={handleModeChange}
         />
@@ -79,10 +84,10 @@ const ModeSelector = () => {
           Auto
         </div>
       </label>
-      {mode === 'auto' && (
+      {mode === 'auto' && autoHanoiState !== 'completed' && (
         <div className="flex">
           {match(autoHanoiState)
-            .with('idle', 'completed', () => (
+            .with('idle', () => (
               <button
                 onClick={startAuto}
                 className="p-2 rounded border border-teal-500 bg-teal-500 text-white transition hover:bg-teal-600"

@@ -24,7 +24,7 @@ const Disc = ({
     })
   const style = {
     transform: CSS.Translate.toString(transform),
-    width: id * 15 + 28,
+    width: id * 24 + 28,
     zIndex: isDragging ? 999 : 99,
     backgroundColor: color,
     outline: isDragging ? 'solid 2px #ccc' : 'none',
@@ -41,7 +41,7 @@ const Disc = ({
     <button
       data-id={id}
       ref={setNodeRef}
-      className={`${cursor} px-2 h-4 py-3 rounded-2xl relative`}
+      className={`${cursor} px-2 h-4 py-4 rounded-2xl relative`}
       style={style}
       {...listeners}
       {...attributes}

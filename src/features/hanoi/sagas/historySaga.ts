@@ -3,6 +3,7 @@ import { call, put, select, takeEvery, takeLeading } from 'redux-saga/effects'
 
 import { HanoiMoveDisc } from '../../../types'
 import {
+  hasCheated,
   moveDisc,
   removeLastMove,
   storeMovement,
@@ -16,6 +17,8 @@ function* storeMovementSaga({
 }: PayloadAction<HanoiMoveDisc>) {
   if (mode === 'manual') {
     yield put(storeMovement({ discId, from: to, to: from }))
+  } else {
+    yield put(hasCheated(true))
   }
 }
 

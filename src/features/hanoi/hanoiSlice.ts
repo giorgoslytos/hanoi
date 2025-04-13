@@ -6,10 +6,11 @@ import generateColors from '../../utils/colorManager'
 
 export interface HanoiState {
   mode: HanoiMode
-  autoHanoiState: 'idle' | 'running' | 'paused' | 'completed' | 'failed'
+  hanoiState: 'idle' | 'running' | 'paused' | 'completed' | 'failed'
   autoSpeed: number
   discsCount: number
   moves: number
+  cheated: boolean
   towers: {
     start: number[]
     temp: number[]
@@ -17,22 +18,18 @@ export interface HanoiState {
   }
   instructions: [string, HanoiInstructions][]
   undo: HanoiMoveDisc[]
-  redo: {
-    start: number[]
-    temp: number[]
-    finish: number[]
-  }[]
   discColors: { [x: string]: string }
 }
 
-const DEFAULT_DISC_COUNT = 3
+const DEFAULT_DISC_COUNT = 4
 
 const initialState: HanoiState = {
   mode: 'manual',
-  autoHanoiState: 'idle',
+  hanoiState: 'idle',
   autoSpeed: 1000,
   discsCount: DEFAULT_DISC_COUNT,
   moves: 0,
+  cheated: false,
   towers: {
     start: Array.from({ length: DEFAULT_DISC_COUNT }, (_, n) => n + 1),
     temp: [],
@@ -40,7 +37,6 @@ const initialState: HanoiState = {
   },
   instructions: [],
   undo: [],
-  redo: [],
   discColors: {},
 }
 
@@ -53,13 +49,10 @@ export const hanoiSlice = createSlice({
     },
     moveDisc: (
       state,
-      { payload: { discId, from, to } }: PayloadAction<HanoiMoveDisc>,
+      { payload: { discId, from, to, mode } }: PayloadAction<HanoiMoveDisc>,
     ) => {
-      state.towers = {
-        ...state.towers,
-        [from]: state.towers[from].slice(1),
-        [to]: [discId, ...state.towers[to]],
-      }
+      state.towers[from] = state.towers[from].slice(1)
+      state.towers[to] = [discId, ...state.towers[to]]
       state.moves = ++state.moves
     },
     moveDiscDelayed: (_state, _action: PayloadAction<HanoiMoveDisc>) => {},
@@ -70,8 +63,10 @@ export const hanoiSlice = createSlice({
         { length: state.discsCount },
         (_, i) => i + 1,
       )
-      state.autoHanoiState = 'idle'
+      state.hanoiState = 'idle'
       state.moves = 0
+      state.undo = []
+      state.cheated = false
     },
     setDiscCount: (state, { payload }: PayloadAction<number>) => {
       state.discsCount = payload
@@ -79,22 +74,23 @@ export const hanoiSlice = createSlice({
       state.towers.finish = []
       state.towers.start = Array.from({ length: payload }, (_, i) => i + 1)
       state.moves = 0
+      state.undo = []
     },
     setAutoSpeed: (state, { payload }: PayloadAction<number>) => {
       state.autoSpeed = payload
     },
     startAutoHanoi: (state) => {
       state.mode = 'auto'
-      state.autoHanoiState = 'running'
+      state.hanoiState = 'running'
     },
     pauseAutoHanoi: (state) => {
-      state.autoHanoiState = 'paused'
+      state.hanoiState = 'paused'
     },
     resumeAuto: (state) => {
-      state.autoHanoiState = 'running'
+      state.hanoiState = 'running'
     },
     completeAutoHanoi: (state) => {
-      state.autoHanoiState = 'completed'
+      state.hanoiState = 'completed'
     },
     setMode: (state, { payload }: PayloadAction<HanoiState['mode']>) => {
       state.mode = payload
@@ -111,6 +107,10 @@ export const hanoiSlice = createSlice({
       { payload }: PayloadAction<[string, HanoiInstructions][]>,
     ) => {
       state.instructions = payload
+    },
+    initialAppLoad: (_state) => {},
+    hasCheated: (state, { payload }: PayloadAction<boolean>) => {
+      state.cheated = payload
     },
   },
 })
@@ -131,6 +131,8 @@ export const {
   undoLastMove,
   setInstructions,
   removeLastMove,
+  initialAppLoad,
+  hasCheated,
 } = hanoiSlice.actions
 
 export default hanoiSlice.reducer

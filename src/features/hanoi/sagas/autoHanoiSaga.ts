@@ -60,8 +60,8 @@ export function* moveDiscCh(discId: number, from: TowerId, to: TowerId) {
     yield delay(autospeed / 2)
     discEl.style.transform = `translate(${toLeft}px,${-toTop}px)`
     yield delay(autospeed / 2)
-    const autoHanoiState: RootState['hanoi']['autoHanoiState'] = yield select(
-      (state: RootState) => state.hanoi.autoHanoiState,
+    const autoHanoiState: RootState['hanoi']['hanoiState'] = yield select(
+      (state: RootState) => state.hanoi.hanoiState,
     )
     if (autoHanoiState === 'paused' || autoHanoiState === 'idle') {
       discEl.style.transform = `translate(0,0)`
@@ -81,8 +81,8 @@ function* autoHanoi() {
   let i = 0
   while (true) {
     const autoState = (yield select(
-      (state: RootState) => state.hanoi.autoHanoiState,
-    )) as RootState['hanoi']['autoHanoiState']
+      (state: RootState) => state.hanoi.hanoiState,
+    )) as RootState['hanoi']['hanoiState']
     if (autoState === 'paused') {
       yield take(resumeAuto.type)
     }
