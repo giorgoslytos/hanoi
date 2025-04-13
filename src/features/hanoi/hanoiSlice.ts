@@ -49,7 +49,7 @@ export const hanoiSlice = createSlice({
     },
     moveDisc: (
       state,
-      { payload: { discId, from, to, mode } }: PayloadAction<HanoiMoveDisc>,
+      { payload: { discId, from, to } }: PayloadAction<HanoiMoveDisc>,
     ) => {
       state.towers[from] = state.towers[from].slice(1)
       state.towers[to] = [discId, ...state.towers[to]]

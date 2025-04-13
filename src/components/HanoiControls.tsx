@@ -2,11 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import React from 'react'
 
-import {
-  resetDiscs,
-  setColors,
-  setDiscCount,
-} from '../features/hanoi/hanoiSlice'
+import { resetDiscs, setDiscCount } from '../features/hanoi/hanoiSlice'
 import getDisableDiscCountSelector from '../features/hanoi/selectors/getDisableDiscCountSelector'
 import { RootState } from '../store'
 import ModeSelector from './ModeSelector'
@@ -14,7 +10,6 @@ import ModeSelector from './ModeSelector'
 const HanoiControls = () => {
   const dispatch = useDispatch()
   const discsCount = useSelector((state: RootState) => state.hanoi.discsCount)
-  const moves = useSelector((state: RootState) => state.hanoi.moves)
 
   const handleReset = () => {
     dispatch(resetDiscs())
