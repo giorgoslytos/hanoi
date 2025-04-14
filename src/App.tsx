@@ -29,7 +29,7 @@ function App() {
         <div>
           <header>
             <h1
-              className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 
+              className="text-3xl sm:text-4xl font-bold text-gray-100 
              text-center my-8"
             >
               Tower of Hanoi
@@ -41,12 +41,12 @@ function App() {
             </div>
             <HanoiControls />
 
-            <div className="bg-white/90 dark:bg-gray-800/90 rounded-lg p-6 my-8">
-              <h2 className="text-2xl font-bold text-teal-600 dark:text-teal-400 mb-4 border-b pb-2">
+            <div className="bg-gray-800/90 rounded-lg p-6 my-8">
+              <h2 className="text-2xl font-bold text-teal-400 mb-4 border-b pb-2">
                 The Tower of Hanoi Puzzle
               </h2>
 
-              <div className="space-y-4 text-gray-700 dark:text-gray-300">
+              <div className="space-y-4 text-gray-300">
                 <p>
                   The Tower of Hanoi is a classic mathematical puzzle that
                   demonstrates principles of recursion and logical thinking.
@@ -68,7 +68,7 @@ function App() {
                   </li>
                 </ul>
 
-                <p className="bg-gray-100 dark:bg-gray-700/50 p-3 rounded-md italic">
+                <p className="bg-gray-700/50 p-3 rounded-md italic">
                   <strong>Did you know?</strong> The minimum number of moves
                   needed to solve the puzzle is 2<sup>n</sup> − 1, where n is
                   the number of disks. For example, 3 disks require 7 moves.
@@ -80,7 +80,7 @@ function App() {
         <footer className="p-8 bg-gray-800 text-white">
           Created by &nbsp;
           <a
-            className="text-teal-600 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-300
+            className="text-teal-400 hover:text-teal-300
         font-semibold transition-colors duration-200 decoration-2 focus:outline-none focus:ring-2 
         focus:ring-teal-200 focus:ring-offset-2 rounded-sm"
             href="https://www.linkedin.com/in/george-litos-215b2918a/"
