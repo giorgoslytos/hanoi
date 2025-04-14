@@ -1,4 +1,11 @@
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import { IoIosColorPalette } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -25,6 +32,20 @@ const Hanoi = ({ finished }: { finished: boolean }) => {
   const handleResetColors = () => {
     dispatch(setColors())
   }
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 10, // Require 10px movement before activating
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        distance: { y: 300 },
+        delay: 0, // Delay activation by 250ms
+        tolerance: 10, // Allow 5px of movement during delay
+      },
+    }),
+  )
   return (
     <div
       className={`border p-8 border-amber-50 ${
@@ -33,7 +54,7 @@ const Hanoi = ({ finished }: { finished: boolean }) => {
           : 'pointer-events-auto'
       }`}
     >
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
         <ContainerWrapper>
           <ButtonIcon
             color="text-gray-500 hover:text-teal-500"
