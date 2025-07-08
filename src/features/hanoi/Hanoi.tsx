@@ -15,11 +15,9 @@ import TowerWrapper from '../../components/TowerWrapper'
 import { RootState } from '../../store'
 import { TowerId } from '../../types'
 import { moveDisc, setColors } from './hanoiSlice'
-import { useWindowSize } from 'react-use'
 
 const Hanoi = ({ finished }: { finished: boolean }) => {
   const dispatch = useDispatch()
-  const { width } = useWindowSize()
   const towers = useSelector((state: RootState) => state.hanoi.towers)
   const mode = useSelector((state: RootState) => state.hanoi.mode)
   function handleDragEnd({ active, over }: DragEndEvent) {
