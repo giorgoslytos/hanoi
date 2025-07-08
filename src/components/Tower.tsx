@@ -28,8 +28,8 @@ const Tower = ({ id }: React.PropsWithChildren<TowerProp>) => {
     minHeight: '200px',
   }
   return (
-    <div className="place-items-center relative min-w-72">
-      <div ref={setNodeRef} data-id={id} className="px-5">
+    <div className="place-items-center relative ">
+      <div ref={setNodeRef} data-id={id} className="px-10">
         <div
           style={style}
           className="relative h-96 border border-b-0 border-x-2 border-t-2 border-amber-100 w-4 bg-orange-200 rounded-t-2xl"

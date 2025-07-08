@@ -15,9 +15,11 @@ import TowerWrapper from '../../components/TowerWrapper'
 import { RootState } from '../../store'
 import { TowerId } from '../../types'
 import { moveDisc, setColors } from './hanoiSlice'
+import { useWindowSize } from 'react-use'
 
 const Hanoi = ({ finished }: { finished: boolean }) => {
   const dispatch = useDispatch()
+  const { width } = useWindowSize()
   const towers = useSelector((state: RootState) => state.hanoi.towers)
   const mode = useSelector((state: RootState) => state.hanoi.mode)
   function handleDragEnd({ active, over }: DragEndEvent) {
@@ -48,7 +50,7 @@ const Hanoi = ({ finished }: { finished: boolean }) => {
   )
   return (
     <div
-      className={`border p-8 border-amber-50 ${
+      className={`md:border md:p-8 border-amber-50 ${
         finished || mode === 'auto'
           ? 'pointer-events-none'
           : 'pointer-events-auto'
@@ -58,7 +60,7 @@ const Hanoi = ({ finished }: { finished: boolean }) => {
         <ContainerWrapper>
           <ButtonIcon
             color="text-gray-500 hover:text-teal-500"
-            className="absolute top-[-24px] right-[-64px] w-10 pointer-events-auto"
+            className="absolute right-[-8px] md:top-[-24px] md:right-[-64px] w-10 pointer-events-auto"
             hoverColor="text-purple-300"
             size={8}
             onClick={handleResetColors}

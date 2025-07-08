@@ -26,13 +26,13 @@ const HanoiControls = () => {
   const disableSelect = useSelector(getDisableDiscCountSelector)
 
   return (
-    <div className="m-8 px-24">
+    <div className="m-2 px-4 sm:m-8 s:px-24">
       <div className="mt-4">
         {hanoiState !== 'completed' ? <ModeSelector /> : <></>}
         <div className="mt-4 flex items-center space-x-2">
           <label
             htmlFor="number"
-            className="text-gray-200 my-auto font-bold w-24"
+            className="text-gray-200 my-auto font-bold w-12"
           >
             Discs:
           </label>

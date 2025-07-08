@@ -115,18 +115,10 @@ function* handleAutoHanoi() {
 export default function* watchAutoHanoiStart() {
   while (true) {
     const task = (yield takeLatest(startAutoHanoi, handleAutoHanoi)) as Task
-
     yield take(resetDiscs)
 
     if (task) {
       yield cancel(task)
-      Array.from({ length: 10 }, (_, index) => index + 1).forEach((discId) => {
-        const discEl = document.querySelector<HTMLButtonElement>(
-          `[data-id="${discId}"]`,
-        )
-        if (!discEl) return
-        discEl.style.transform = 'translate(0,0)'
-      })
     }
   }
 }

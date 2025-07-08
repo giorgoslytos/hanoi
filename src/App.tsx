@@ -36,7 +36,7 @@ function App() {
             </h1>
           </header>
           <main>
-            <div className="flex flex-wrap justify-center">
+            <div className="flex flex-wrap flex-col justify-center">
               <Hanoi finished={isCompleted} />
             </div>
             <HanoiControls />
@@ -77,7 +77,7 @@ function App() {
             </div>
           </main>
         </div>
-        <footer className="p-8 bg-gray-800 text-white">
+        <footer className="md:p-8 bg-gray-800 text-white">
           Created by &nbsp;
           <a
             className="text-teal-400 hover:text-teal-300
